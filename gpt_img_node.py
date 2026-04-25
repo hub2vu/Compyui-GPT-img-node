@@ -57,6 +57,39 @@ PROMPT_SUFFIX = (
     "or restyle it unless the user requested that."
 )
 
+DEFAULT_GENERATION_INSTRUCTIONS = (
+    "Create a product-only apparel design image for fashion planning.\n\n"
+    "Output format:\n"
+    "Show exactly two views of the same garment in one image:\n"
+    "- front view on the left\n"
+    "- back view on the right\n\n"
+    "The garment must be shown alone on a clean white or very light gray background. "
+    "The result should look like a professional e-commerce product catalog image "
+    "or a fashion technical presentation image.\n\n"
+    "The front and back views must represent the same garment design. Use the same "
+    "color, fabric, sleeve shape, collar type, hem shape, and overall silhouette "
+    "in both views."
+)
+
+DEFAULT_REFERENCE_INSTRUCTIONS = (
+    "Use the first reference image, if provided, as a layout reference only for "
+    "the front/back side-by-side composition.\n"
+    "Use the other reference images only for garment category, silhouette, color, "
+    "material feel, fabric texture, collar, sleeve, button, pocket, seam, and hem details.\n"
+    "Do not copy the exact product design, brand, logo, text, watermark, person, "
+    "pose, background, or photography artifacts.\n"
+    "If reference images contain a human model, ignore the person and use only "
+    "the garment design cues.\n"
+    "The user design request has priority over the reference images if there is any conflict."
+)
+
+DEFAULT_HARD_CONSTRAINTS = (
+    "No human model. No mannequin. No hanger. No body parts. No face. No arms. "
+    "No legs. No person wearing the garment. No lifestyle background. No studio props. "
+    "No table. No folded garment. No flat lay. No extra accessories. No text labels. "
+    "No logo. No watermark."
+)
+
 
 def _oauth_url(oauth_port):
     return f"http://127.0.0.1:{int(oauth_port)}"
@@ -375,6 +408,33 @@ def _return_images(results):
     return torch.cat(tensors, dim=0), revised
 
 
+def _section(title, value):
+    value = (value or "").strip()
+    if not value:
+        return ""
+    return f"{title}:\n{value}"
+
+
+def _compose_advanced_generate_prompt(
+    design_request,
+    generation_instructions,
+    reference_instructions,
+    hard_constraints,
+):
+    sections = [
+        _section("Authoritative user design request", design_request),
+        (
+            "Conflict rule:\n"
+            "If any instruction conflicts with the user design request above, "
+            "follow the user design request."
+        ),
+        _section("Generation instructions", generation_instructions),
+        _section("Reference image instructions", reference_instructions),
+        _section("Hard constraints", hard_constraints),
+    ]
+    return "\n\n".join(section for section in sections if section)
+
+
 class GPTImgOAuthGenerate:
     @classmethod
     def INPUT_TYPES(cls):
@@ -414,6 +474,74 @@ class GPTImgOAuthGenerate:
         reference_image=None,
     ):
         _ensure_oauth(oauth_port, auto_start_oauth)
+        references = _tensor_batch_to_refs(reference_image)
+        results = [
+            _generate_one(prompt, model, quality, size, moderation, references, oauth_port, _post_oauth, timeout_sec)
+            for _ in range(int(n))
+        ]
+        return _return_images(results)
+
+
+class GPTImgOAuthGenerateAdvanced:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "design_request": ("STRING", {"multiline": True, "default": "Men's navy summer suit."}),
+                "generation_instructions": (
+                    "STRING",
+                    {"multiline": True, "default": DEFAULT_GENERATION_INSTRUCTIONS},
+                ),
+                "reference_instructions": (
+                    "STRING",
+                    {"multiline": True, "default": DEFAULT_REFERENCE_INSTRUCTIONS},
+                ),
+                "hard_constraints": (
+                    "STRING",
+                    {"multiline": True, "default": DEFAULT_HARD_CONSTRAINTS},
+                ),
+                "model": (OAUTH_MODELS, {"default": "gpt-5.4"}),
+                "quality": (QUALITY_VALUES, {"default": "medium"}),
+                "size": (SIZE_VALUES, {"default": "1024x1024"}),
+                "moderation": (MODERATION_VALUES, {"default": "low"}),
+                "n": ("INT", {"default": 1, "min": 1, "max": 8}),
+                "oauth_port": ("INT", {"default": 10531, "min": 1024, "max": 65535}),
+                "auto_start_oauth": ("BOOLEAN", {"default": True}),
+                "timeout_sec": ("INT", {"default": 300, "min": 30, "max": 3600}),
+            },
+            "optional": {
+                "reference_image": ("IMAGE",),
+            },
+        }
+
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("image", "revised_prompt")
+    FUNCTION = "generate"
+    CATEGORY = NODE_CATEGORY
+
+    def generate(
+        self,
+        design_request,
+        generation_instructions,
+        reference_instructions,
+        hard_constraints,
+        model,
+        quality,
+        size,
+        moderation,
+        n,
+        oauth_port,
+        auto_start_oauth,
+        timeout_sec,
+        reference_image=None,
+    ):
+        _ensure_oauth(oauth_port, auto_start_oauth)
+        prompt = _compose_advanced_generate_prompt(
+            design_request,
+            generation_instructions,
+            reference_instructions,
+            hard_constraints,
+        )
         references = _tensor_batch_to_refs(reference_image)
         results = [
             _generate_one(prompt, model, quality, size, moderation, references, oauth_port, _post_oauth, timeout_sec)
@@ -498,6 +626,71 @@ class GPTImgAPIGenerate:
         timeout_sec,
         reference_image=None,
     ):
+        references = _tensor_batch_to_refs(reference_image)
+        results = [
+            _generate_one(prompt, model, quality, size, moderation, references, api_key, _post_api, timeout_sec)
+            for _ in range(int(n))
+        ]
+        return _return_images(results)
+
+
+class GPTImgAPIGenerateAdvanced:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "design_request": ("STRING", {"multiline": True, "default": "Men's navy summer suit."}),
+                "generation_instructions": (
+                    "STRING",
+                    {"multiline": True, "default": DEFAULT_GENERATION_INSTRUCTIONS},
+                ),
+                "reference_instructions": (
+                    "STRING",
+                    {"multiline": True, "default": DEFAULT_REFERENCE_INSTRUCTIONS},
+                ),
+                "hard_constraints": (
+                    "STRING",
+                    {"multiline": True, "default": DEFAULT_HARD_CONSTRAINTS},
+                ),
+                "api_key": ("STRING", {"default": ""}),
+                "model": (API_MODELS, {"default": "gpt-5.5"}),
+                "quality": (QUALITY_VALUES, {"default": "medium"}),
+                "size": (SIZE_VALUES, {"default": "1024x1024"}),
+                "moderation": (MODERATION_VALUES, {"default": "low"}),
+                "n": ("INT", {"default": 1, "min": 1, "max": 8}),
+                "timeout_sec": ("INT", {"default": 300, "min": 30, "max": 3600}),
+            },
+            "optional": {
+                "reference_image": ("IMAGE",),
+            },
+        }
+
+    RETURN_TYPES = ("IMAGE", "STRING")
+    RETURN_NAMES = ("image", "revised_prompt")
+    FUNCTION = "generate"
+    CATEGORY = NODE_CATEGORY
+
+    def generate(
+        self,
+        design_request,
+        generation_instructions,
+        reference_instructions,
+        hard_constraints,
+        api_key,
+        model,
+        quality,
+        size,
+        moderation,
+        n,
+        timeout_sec,
+        reference_image=None,
+    ):
+        prompt = _compose_advanced_generate_prompt(
+            design_request,
+            generation_instructions,
+            reference_instructions,
+            hard_constraints,
+        )
         references = _tensor_batch_to_refs(reference_image)
         results = [
             _generate_one(prompt, model, quality, size, moderation, references, api_key, _post_api, timeout_sec)

@@ -11,8 +11,10 @@ gallery, session store, or local database.
 ## Nodes
 
 - `GPT img OAuth Generate`
+- `GPT img OAuth Generate Advanced`
 - `GPT img OAuth Edit`
 - `GPT img API Generate`
+- `GPT img API Generate Advanced`
 - `GPT img API Edit`
 
 All nodes return:
@@ -32,9 +34,11 @@ status: NodeVersionStatusPending
 extract_status: success
 ```
 
-Because the version is still `Pending`, it may not appear in ComfyUI Manager
-search yet. Manual Git installation works now. Manager installation should become
-available after the Registry version becomes `NodeVersionStatusActive`.
+This repository is now `0.1.1`. Re-run the publish workflow to submit the newer
+version to the Registry. Because the published version is still `Pending`, it may
+not appear in ComfyUI Manager search yet. Manual Git installation works now.
+Manager installation should become available after a Registry version becomes
+`NodeVersionStatusActive`.
 
 You can check the live Registry status with:
 
@@ -61,6 +65,21 @@ Enter an OpenAI API key in the node's `api_key` field, or leave it empty and set
 `OPENAI_API_KEY` in your environment.
 
 API usage is billed to the API key owner by OpenAI.
+
+## Advanced Generate Nodes
+
+Use `GPT img OAuth Generate Advanced` or `GPT img API Generate Advanced` when you
+want to separate the user's design request from reusable generation rules.
+
+Advanced generate inputs:
+
+- `design_request`: the authoritative garment/design request, in any language
+- `generation_instructions`: reusable output format and quality instructions
+- `reference_instructions`: how reference images should be interpreted
+- `hard_constraints`: negative constraints such as no model, no logo, no text
+
+The node automatically adds a conflict rule so `design_request` wins if another
+instruction conflicts with it.
 
 ## OAuth Nodes
 

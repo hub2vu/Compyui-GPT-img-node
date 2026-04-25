@@ -11,8 +11,10 @@ ComfyUI 커스텀 노드입니다.
 ## 노드
 
 - `GPT img OAuth Generate`
+- `GPT img OAuth Generate Advanced`
 - `GPT img OAuth Edit`
 - `GPT img API Generate`
+- `GPT img API Generate Advanced`
 - `GPT img API Edit`
 
 모든 노드는 다음을 반환합니다:
@@ -32,9 +34,11 @@ status: NodeVersionStatusPending
 extract_status: success
 ```
 
-버전 상태가 아직 `Pending`이므로 ComfyUI Manager 검색에 바로 보이지 않을 수
-있습니다. 현재는 수동 Git 설치가 가능합니다. Registry 버전 상태가
-`NodeVersionStatusActive`가 되면 Manager 설치도 가능해질 예정입니다.
+이 저장소의 현재 버전은 `0.1.1`입니다. 새 버전을 Registry에 올리려면 publish
+workflow를 다시 실행해야 합니다. 공개된 Registry 버전 상태가 아직 `Pending`이므로
+ComfyUI Manager 검색에 바로 보이지 않을 수 있습니다. 현재는 수동 Git 설치가
+가능합니다. Registry 버전 상태가 `NodeVersionStatusActive`가 되면 Manager 설치도
+가능해질 예정입니다.
 
 실시간 Registry 상태는 다음 명령으로 확인할 수 있습니다:
 
@@ -61,6 +65,21 @@ git clone https://github.com/hub2vu/Compyui-GPT-img-node.git GPT-img
 `OPENAI_API_KEY`를 설정할 수 있습니다.
 
 API 사용 요금은 API 키 소유자의 OpenAI 계정에 청구됩니다.
+
+## Advanced Generate 노드
+
+사용자의 디자인 요청과 재사용 가능한 생성 규칙을 분리하고 싶을 때
+`GPT img OAuth Generate Advanced` 또는 `GPT img API Generate Advanced`를 사용하세요.
+
+Advanced generate 입력:
+
+- `design_request`: 최우선으로 따를 의상/디자인 요청. 어떤 언어로 작성해도 됩니다.
+- `generation_instructions`: 출력 형식과 품질 규칙 같은 재사용 템플릿
+- `reference_instructions`: reference image를 해석하는 방법
+- `hard_constraints`: 모델 없음, 로고 없음, 텍스트 없음 같은 금지 조건
+
+노드는 자동으로 conflict rule을 추가합니다. 다른 지시가 `design_request`와
+충돌하면 `design_request`를 우선합니다.
 
 ## OAuth 노드
 
