@@ -1,5 +1,7 @@
 # GPT img for ComfyUI
 
+Languages: [English](README.md) | [한국어](README.ko.md) | [中文](README.zh-CN.md)
+
 ComfyUI custom nodes for GPT image generation through either OpenAI API keys or
 Codex/ChatGPT OAuth.
 
