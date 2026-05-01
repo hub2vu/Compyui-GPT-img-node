@@ -41,7 +41,7 @@ status: NodeVersionStatusPending
 extract_status: success
 ```
 
-当前仓库版本为 `0.1.5`。如需把新版本提交到 Registry，请重新运行 publish
+当前仓库版本为 `0.1.6`。如需把新版本提交到 Registry，请重新运行 publish
 workflow。由于已发布的 Registry 版本状态仍为 `Pending`，它可能暂时不会出现在
 ComfyUI Manager 搜索结果中。目前可以手动通过 Git 安装。等 Registry 版本状态变为
 `NodeVersionStatusActive` 后，应该就可以通过 Manager 安装。
@@ -94,6 +94,7 @@ ChatGPT LLM 节点也提供可选的提示词输入 socket:
 - `user_prompt_input`: 连接后会覆盖 `prompt` 的可选 STRING socket
 
 如果提示词 socket 没有连接，节点会使用直接在节点控件中输入的文本。
+`system_prompt` 控件会追加在原有图像生成控件之后，因此旧 workflow 的原有控件顺序会保持不变。
 
 ChatGPT LLM 模型选项包含 `gpt-5.5-pro`。图像生成节点保留独立模型列表，因为 pro
 模型的 streaming 支持可能不同。

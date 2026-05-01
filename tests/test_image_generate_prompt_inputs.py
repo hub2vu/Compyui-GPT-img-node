@@ -17,6 +17,67 @@ def load_gpt_img_node():
 
 
 class ImageGeneratePromptInputTests(unittest.TestCase):
+    def test_generate_nodes_preserve_legacy_required_widget_order(self):
+        module = load_gpt_img_node()
+
+        expected_prefixes = {
+            module.GPTImgOAuthGenerate: [
+                "prompt",
+                "model",
+                "quality",
+                "size",
+                "moderation",
+                "n",
+                "oauth_port",
+                "auto_start_oauth",
+                "timeout_sec",
+            ],
+            module.GPTImgOAuthGenerateAdvanced: [
+                "design_request",
+                "generation_instructions",
+                "reference_instructions",
+                "hard_constraints",
+                "model",
+                "quality",
+                "size",
+                "moderation",
+                "n",
+                "oauth_port",
+                "auto_start_oauth",
+                "timeout_sec",
+            ],
+            module.GPTImgAPIGenerate: [
+                "prompt",
+                "api_key",
+                "model",
+                "quality",
+                "size",
+                "moderation",
+                "n",
+                "timeout_sec",
+            ],
+            module.GPTImgAPIGenerateAdvanced: [
+                "design_request",
+                "generation_instructions",
+                "reference_instructions",
+                "hard_constraints",
+                "api_key",
+                "model",
+                "quality",
+                "size",
+                "moderation",
+                "n",
+                "timeout_sec",
+            ],
+        }
+
+        for node_class, expected_prefix in expected_prefixes.items():
+            with self.subTest(node_class=node_class.__name__):
+                required_order = list(node_class.INPUT_TYPES()["required"])
+
+                self.assertEqual(required_order[: len(expected_prefix)], expected_prefix)
+                self.assertEqual(required_order[-1], "system_prompt")
+
     def test_generate_nodes_expose_system_and_user_prompt_input_sockets(self):
         module = load_gpt_img_node()
 

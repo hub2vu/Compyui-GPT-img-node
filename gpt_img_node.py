@@ -648,7 +648,6 @@ class GPTImgOAuthGenerate:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "system_prompt": ("STRING", {"multiline": True, "default": GENERATE_DEVELOPER_PROMPT}),
                 "prompt": ("STRING", {"multiline": True, "default": "a cinematic image"}),
                 "model": (OAUTH_MODELS, {"default": "gpt-5.4"}),
                 "quality": (QUALITY_VALUES, {"default": "medium"}),
@@ -658,6 +657,7 @@ class GPTImgOAuthGenerate:
                 "oauth_port": ("INT", {"default": 10531, "min": 1024, "max": 65535}),
                 "auto_start_oauth": ("BOOLEAN", {"default": True}),
                 "timeout_sec": ("INT", {"default": 300, "min": 30, "max": 3600}),
+                "system_prompt": ("STRING", {"multiline": True, "default": GENERATE_DEVELOPER_PROMPT}),
             },
             "optional": {
                 "system_prompt_input": PROMPT_INPUT_SOCKET,
@@ -714,7 +714,6 @@ class GPTImgOAuthGenerateAdvanced:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "system_prompt": ("STRING", {"multiline": True, "default": GENERATE_DEVELOPER_PROMPT}),
                 "design_request": ("STRING", {"multiline": True, "default": "Men's navy summer suit."}),
                 "generation_instructions": (
                     "STRING",
@@ -736,6 +735,7 @@ class GPTImgOAuthGenerateAdvanced:
                 "oauth_port": ("INT", {"default": 10531, "min": 1024, "max": 65535}),
                 "auto_start_oauth": ("BOOLEAN", {"default": True}),
                 "timeout_sec": ("INT", {"default": 300, "min": 30, "max": 3600}),
+                "system_prompt": ("STRING", {"multiline": True, "default": GENERATE_DEVELOPER_PROMPT}),
             },
             "optional": {
                 "system_prompt_input": PROMPT_INPUT_SOCKET,
@@ -841,7 +841,6 @@ class GPTImgAPIGenerate:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "system_prompt": ("STRING", {"multiline": True, "default": GENERATE_DEVELOPER_PROMPT}),
                 "prompt": ("STRING", {"multiline": True, "default": "a cinematic image"}),
                 "api_key": ("STRING", {"default": ""}),
                 "model": (API_MODELS, {"default": "gpt-5.5"}),
@@ -850,6 +849,7 @@ class GPTImgAPIGenerate:
                 "moderation": (MODERATION_VALUES, {"default": "low"}),
                 "n": ("INT", {"default": 1, "min": 1, "max": 8}),
                 "timeout_sec": ("INT", {"default": 300, "min": 30, "max": 3600}),
+                "system_prompt": ("STRING", {"multiline": True, "default": GENERATE_DEVELOPER_PROMPT}),
             },
             "optional": {
                 "system_prompt_input": PROMPT_INPUT_SOCKET,
@@ -904,7 +904,6 @@ class GPTImgAPIGenerateAdvanced:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "system_prompt": ("STRING", {"multiline": True, "default": GENERATE_DEVELOPER_PROMPT}),
                 "design_request": ("STRING", {"multiline": True, "default": "Men's navy summer suit."}),
                 "generation_instructions": (
                     "STRING",
@@ -925,6 +924,7 @@ class GPTImgAPIGenerateAdvanced:
                 "moderation": (MODERATION_VALUES, {"default": "low"}),
                 "n": ("INT", {"default": 1, "min": 1, "max": 8}),
                 "timeout_sec": ("INT", {"default": 300, "min": 30, "max": 3600}),
+                "system_prompt": ("STRING", {"multiline": True, "default": GENERATE_DEVELOPER_PROMPT}),
             },
             "optional": {
                 "system_prompt_input": PROMPT_INPUT_SOCKET,
