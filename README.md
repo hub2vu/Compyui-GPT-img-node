@@ -41,7 +41,7 @@ status: NodeVersionStatusPending
 extract_status: success
 ```
 
-This repository is now `0.1.4`. Re-run the publish workflow to submit the newer
+This repository is now `0.1.5`. Re-run the publish workflow to submit the newer
 version to the Registry. Because the published version is still `Pending`, it may
 not appear in ComfyUI Manager search yet. Manual Git installation works now.
 Manager installation should become available after a Registry version becomes
@@ -99,6 +99,9 @@ ChatGPT LLM nodes also expose optional prompt input sockets:
 
 If a prompt socket is not connected, the node uses the text entered directly in
 the node widget.
+
+ChatGPT LLM model choices include `gpt-5.5-pro`. The image generation nodes keep
+their separate model list because pro models can have different streaming support.
 
 ## Image Generate Prompt Inputs
 

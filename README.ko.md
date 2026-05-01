@@ -41,7 +41,7 @@ status: NodeVersionStatusPending
 extract_status: success
 ```
 
-이 저장소의 현재 버전은 `0.1.4`입니다. 새 버전을 Registry에 올리려면 publish
+이 저장소의 현재 버전은 `0.1.5`입니다. 새 버전을 Registry에 올리려면 publish
 workflow를 다시 실행해야 합니다. 공개된 Registry 버전 상태가 아직 `Pending`이므로
 ComfyUI Manager 검색에 바로 보이지 않을 수 있습니다. 현재는 수동 Git 설치가
 가능합니다. Registry 버전 상태가 `NodeVersionStatusActive`가 되면 Manager 설치도
@@ -96,6 +96,9 @@ ChatGPT LLM 노드도 선택형 프롬프트 입력 소켓을 제공합니다:
 - `user_prompt_input`: 연결되면 `prompt`를 대신 사용하는 선택형 STRING 소켓
 
 프롬프트 소켓이 연결되어 있지 않으면 노드 위젯에 직접 입력한 텍스트를 사용합니다.
+
+ChatGPT LLM 모델 선택지에는 `gpt-5.5-pro`가 포함됩니다. 이미지 생성 노드는 pro
+모델의 스트리밍 지원이 다를 수 있어서 별도 모델 목록을 유지합니다.
 
 ## 이미지 Generate 프롬프트 입력
 

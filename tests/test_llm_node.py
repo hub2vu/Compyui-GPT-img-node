@@ -88,6 +88,7 @@ class LLMNodeTests(unittest.TestCase):
 
         self.assertIn("api_key", required)
         self.assertIn("reasoning_effort", required)
+        self.assertIn("gpt-5.5-pro", required["model"][0])
         self.assertIn("system_prompt_input", optional)
         self.assertIn("user_prompt_input", optional)
         self.assertTrue(optional["system_prompt_input"][1]["forceInput"])
@@ -98,8 +99,10 @@ class LLMNodeTests(unittest.TestCase):
 
     def test_oauth_llm_node_contract_includes_prompt_input_sockets(self):
         module = load_gpt_img_node()
-        optional = module.GPTImgOAuthLLM.INPUT_TYPES()["optional"]
+        inputs = module.GPTImgOAuthLLM.INPUT_TYPES()
+        optional = inputs["optional"]
 
+        self.assertIn("gpt-5.5-pro", inputs["required"]["model"][0])
         self.assertIn("system_prompt_input", optional)
         self.assertIn("user_prompt_input", optional)
         self.assertTrue(optional["system_prompt_input"][1]["forceInput"])

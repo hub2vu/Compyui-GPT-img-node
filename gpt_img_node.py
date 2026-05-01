@@ -20,6 +20,8 @@ OAUTH_PROCESS = None
 NODE_CATEGORY = "GPT img"
 OAUTH_MODELS = ["gpt-5.4", "gpt-5.4-mini", "gpt-5.5"]
 API_MODELS = ["gpt-5.5", "gpt-5", "gpt-5.4", "gpt-5.4-mini"]
+OAUTH_LLM_MODELS = ["gpt-5.5-pro", "gpt-5.5", "gpt-5.4", "gpt-5.4-mini"]
+API_LLM_MODELS = ["gpt-5.5-pro", "gpt-5.5", "gpt-5", "gpt-5.4", "gpt-5.4-mini"]
 REASONING_EFFORT_VALUES = ["minimal", "low", "medium", "high", "xhigh"]
 QUALITY_VALUES = ["low", "medium", "high"]
 MODERATION_VALUES = ["low", "auto"]
@@ -543,7 +545,7 @@ class GPTImgOAuthLLM:
             "required": {
                 "system_prompt": ("STRING", {"multiline": True, "default": "You are a helpful assistant."}),
                 "prompt": ("STRING", {"multiline": True, "default": "Write a short answer."}),
-                "model": (OAUTH_MODELS, {"default": "gpt-5.4"}),
+                "model": (OAUTH_LLM_MODELS, {"default": "gpt-5.5"}),
                 "reasoning_effort": (REASONING_EFFORT_VALUES, {"default": "medium"}),
                 "max_output_tokens": ("INT", {"default": 2048, "min": 16, "max": 128000}),
                 "oauth_port": ("INT", {"default": 10531, "min": 1024, "max": 65535}),
@@ -598,7 +600,7 @@ class GPTImgAPILLM:
                 "system_prompt": ("STRING", {"multiline": True, "default": "You are a helpful assistant."}),
                 "prompt": ("STRING", {"multiline": True, "default": "Write a short answer."}),
                 "api_key": ("STRING", {"default": ""}),
-                "model": (API_MODELS, {"default": "gpt-5.5"}),
+                "model": (API_LLM_MODELS, {"default": "gpt-5.5"}),
                 "reasoning_effort": (REASONING_EFFORT_VALUES, {"default": "medium"}),
                 "max_output_tokens": ("INT", {"default": 2048, "min": 16, "max": 128000}),
                 "timeout_sec": ("INT", {"default": 300, "min": 30, "max": 3600}),

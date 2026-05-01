@@ -1,6 +1,6 @@
 [project]
 name = "gpt-img-node"
-version = "0.1.4"
+version = "0.1.5"
 description = "ComfyUI custom nodes for GPT image generation and ChatGPT LLM text responses through OpenAI API keys or Codex/ChatGPT OAuth."
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
